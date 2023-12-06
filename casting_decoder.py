@@ -18,7 +18,7 @@ def get_search_terms():
 def main():
     # Load the CSV file
     # Ensure to replace 'path_to_csv.csv' with the actual path to your CSV file
-    df = pd.read_csv('qbinv_cores.csv')
+    df = pd.read_csv('bom.csv')
 
     # Get search terms from command line arguments or user input
     search_terms = get_search_terms()
