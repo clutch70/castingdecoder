@@ -72,12 +72,20 @@ if(isset($_POST['add_to_cart'])) {
 
         if ($output) {
             foreach ($output as $key => $item) {
+                // Check for special values or missing data
+                $partNumber = isset($item['PartNumber']) ? $item['PartNumber'] : 'N/A';
+                $description = isset($item['Description']) ? $item['Description'] : 'No description available';
+                $cost = (isset($item['Cost']) && is_numeric($item['Cost'])) ? $item['Cost'] : '0';
+                $price = (isset($item['Price']) && is_numeric($item['Price'])) ? $item['Price'] : '0';
+                $hollander = isset($item['Hollander']) ? $item['Hollander'] : 'N/A'; // Handling for Hollander column
+
                 echo '<form action="" method="post">';
-                echo '<input type="hidden" name="part_number" value="' . htmlspecialchars($item['PartNumber']) . '">';
-                echo '<input type="hidden" name="description" value="' . htmlspecialchars($item['Description']) . '">';
-                echo '<input type="hidden" name="cost" value="' . htmlspecialchars($item['Cost']) . '">';
-                echo '<input type="hidden" name="price" value="' . htmlspecialchars($item['Price']) . '">';
-                echo '<p>' . htmlspecialchars($item['Description']) . '</p>'; // Display the description or other details
+                echo '<input type="hidden" name="part_number" value="' . htmlspecialchars($partNumber) . '">';
+                echo '<input type="hidden" name="description" value="' . htmlspecialchars($description) . '">';
+                echo '<input type="hidden" name="cost" value="' . htmlspecialchars($cost) . '">';
+                echo '<input type="hidden" name="price" value="' . htmlspecialchars($price) . '">';
+                // Include Hollander data in the form if necessary
+                echo '<p>' . htmlspecialchars($description) . ' - Hollander: ' . htmlspecialchars($hollander) . '</p>';
                 echo '<button type="submit" name="add_to_cart">Add to Cart</button>';
                 echo '</form>';
             }
@@ -87,6 +95,7 @@ if(isset($_POST['add_to_cart'])) {
     }
     ?>
 </div>
+
     <!-- Cart Display -->
 <div class="cart-container">
     <h2>Current Load</h2>
