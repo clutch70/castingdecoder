@@ -24,7 +24,7 @@
         if (isset($_POST['submit'])) {
             $search_terms = escapeshellarg($_POST['search_terms']);
             // Call the Python script with the search terms
-            $command = escapeshellcmd("python engine_lookup.py $search_terms");
+            $command = escapeshellcmd("python casting_decoder.py $search_terms");
             $output = shell_exec($command);
             echo htmlspecialchars($output);
         }
