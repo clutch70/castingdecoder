@@ -63,38 +63,16 @@ if(isset($_POST['add_to_cart'])) {
         </form>
     </div>
     <div class="output">
-    <?php
-    if (isset($_POST['submit'])) {
-        $search_terms = escapeshellarg($_POST['search_terms']);
-        // Call the Python script with the search terms
-        $command = escapeshellcmd("python search_csv.py $search_terms");
-        $output = shell_exec($command);
-        $results = json_decode($output, true);
-
-        if ($results) {
-            echo '<table>';
-            echo '<tr><th>Part Number</th><th>Description</th><th>Cost</th><th>Price</th><th>Action</th></tr>';
-            foreach ($results as $partNumber => $details) {
-                echo '<tr>';
-                echo '<td>' . htmlspecialchars($partNumber) . '</td>';
-                echo '<td>' . htmlspecialchars($details['description']) . '</td>';
-                echo '<td>' . htmlspecialchars($details['cost']) . '</td>';
-                echo '<td>' . htmlspecialchars($details['price']) . '</td>';
-                echo '<td><form method="post"><input type="hidden" name="part_number" value="' . htmlspecialchars($partNumber) . '">';
-                foreach ($details as $key => $value) {
-                    echo '<input type="hidden" name="' . $key . '" value="' . htmlspecialchars($value) . '">';
-                }
-                echo '<button type="submit" name="add_to_cart">Add to Cart</button></form></td>';
-                echo '</tr>';
-            }
-            echo '</table>';
-        } else {
-            echo '<p>No results found.</p>';
+        <?php
+        if (isset($_POST['submit'])) {
+            $search_terms = escapeshellarg($_POST['search_terms']);
+            // Call the Python script with the search terms
+            $command = escapeshellcmd("python3 casting_decoder.py $search_terms");
+            $output = shell_exec($command);
+            echo htmlspecialchars($output);
         }
-    }
-    ?>
-</div>
-
+        ?>
+    </div>
     <!-- Cart Display -->
 <div class="cart-container">
     <h2>Current Load</h2>
