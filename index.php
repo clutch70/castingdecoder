@@ -10,6 +10,12 @@ function addToCart($partNumber, $description, $cost, $price) {
     ];
 }
 
+// Function to clear the cart
+function clearCart() {
+    $_SESSION['cart'] = array(); // This will reset the cart to an empty array.
+}
+
+
 // Function to export cart.
 function exportCart() {
     header('Content-Type: text/csv');
@@ -30,6 +36,12 @@ function exportCart() {
 if(isset($_GET['action']) && $_GET['action'] == 'export') {
     exportCart();
 }
+
+// Check for clear cart action
+if(isset($_POST['clear_cart'])) {
+    clearCart();
+}
+
 
 // Check for add to cart action
 if(isset($_POST['add_to_cart'])) {
@@ -125,6 +137,10 @@ if(isset($_POST['add_to_cart'])) {
             <?php endif; ?>
         </tbody>
     </table>
+    <form action="" method="post">
+        <button type="submit" name="clear_cart">Clear Load</button>
+    </form>
+
     <a href="?action=export">Export as CSV</a>
 </div>
 </body>
