@@ -1,6 +1,6 @@
 import sys
 import pandas as pd
-
+import json  # Import the json module
 
 # Function to get search terms
 def get_search_terms():
@@ -14,10 +14,9 @@ def get_search_terms():
     # Split the search string into terms
     return search_string.split()
 
-
 def main():
     # Load the CSV file
-    # Ensure to replace 'path_to_csv.csv' with the actual path to your CSV file
+    # Ensure to replace 'bom.csv' with the actual path to your CSV file
     df = pd.read_csv('bom.csv')
 
     # Get search terms from command line arguments or user input
@@ -34,15 +33,10 @@ def main():
     filtered_df = df[mask]
 
     # Convert the filtered dataframe to a dictionary
-    parts_dict = filtered_df.set_index('PartNumber').T.to_dict('dict')
+    parts_dict = filtered_df.set_index('PartNumber').T.to_dict()
 
-    # Display the dictionary
-    for part_number, details in parts_dict.items():
-        print(f"Part Number: {part_number}")
-        for key, value in details.items():
-            print(f"  {key}: {value}")
-        print()  # Add a new line for readability between parts
-
+    # Convert the dictionary to a JSON string and print
+    print(json.dumps(parts_dict, indent=4))
 
 if __name__ == '__main__':
     main()
