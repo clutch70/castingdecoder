@@ -69,6 +69,7 @@ if(isset($_POST['add_to_cart'])) {
         $command = escapeshellcmd("python3 casting_decoder.py $search_terms");
         echo $command;
         $json_output = shell_exec($command);
+        $json_output = str_replace('NaN', 'null', $json_output);
         echo $json_output;
         $output = json_decode($json_output, true); // Decodes the JSON output to an associative array
         echo 'showing decoded output';
