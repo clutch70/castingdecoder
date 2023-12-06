@@ -1,6 +1,6 @@
 import sys
 import pandas as pd
-import json  # Import the json module
+import json
 
 # Function to get search terms
 def get_search_terms():
@@ -16,7 +16,6 @@ def get_search_terms():
 
 def main():
     # Load the CSV file
-    # Ensure to replace 'bom.csv' with the actual path to your CSV file
     df = pd.read_csv('bom.csv')
 
     # Get search terms from command line arguments or user input
@@ -32,8 +31,15 @@ def main():
     # Apply the mask to the dataframe to filter the results
     filtered_df = df[mask]
 
+    # Check if the DataFrame has data
+    if not filtered_df.empty:
+        print("Filtered DataFrame is not empty. Proceeding to convert to JSON.")
+    else:
+        print("Filtered DataFrame is empty. Exiting.")
+        return
+
     # Convert the filtered dataframe to a dictionary
-    parts_dict = filtered_df.set_index('PartNumber').T.to_dict()
+    parts_dict = filtered_df.to_dict(orient='index')
 
     # Convert the dictionary to a JSON string and print
     print(json.dumps(parts_dict, indent=4))
