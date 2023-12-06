@@ -67,7 +67,9 @@ if(isset($_POST['add_to_cart'])) {
     if (isset($_POST['submit'])) {
         $search_terms = escapeshellarg($_POST['search_terms']);
         $command = escapeshellcmd("python3 casting_decoder.py $search_terms");
+        echo $command;
         $json_output = shell_exec($command);
+        echo $json_output
         $output = json_decode($json_output, true); // Decodes the JSON output to an associative array
 
         if ($output) {
