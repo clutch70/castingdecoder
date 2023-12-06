@@ -67,7 +67,7 @@ if(isset($_POST['add_to_cart'])) {
     if (isset($_POST['submit'])) {
         $search_terms = escapeshellarg($_POST['search_terms']);
         // Call the Python script with the search terms
-        $command = escapeshellcmd("python search_csv.py $search_terms");
+        $command = escapeshellcmd("python3 casting_decoder.py $search_terms");
         $output = shell_exec($command);
         $results = json_decode($output, true);
 
