@@ -63,16 +63,30 @@ if(isset($_POST['add_to_cart'])) {
         </form>
     </div>
     <div class="output">
-        <?php
-        if (isset($_POST['submit'])) {
-            $search_terms = escapeshellarg($_POST['search_terms']);
-            // Call the Python script with the search terms
-            $command = escapeshellcmd("python3 casting_decoder.py $search_terms");
-            $output = shell_exec($command);
-            echo htmlspecialchars($output);
+    <?php
+    if (isset($_POST['submit'])) {
+        $search_terms = escapeshellarg($_POST['search_terms']);
+        $command = escapeshellcmd("python3 casting_decoder.py $search_terms");
+        $json_output = shell_exec($command);
+        $output = json_decode($json_output, true); // Decodes the JSON output to an associative array
+
+        if ($output) {
+            foreach ($output as $key => $item) {
+                echo '<form action="" method="post">';
+                echo '<input type="hidden" name="part_number" value="' . htmlspecialchars($item['PartNumber']) . '">';
+                echo '<input type="hidden" name="description" value="' . htmlspecialchars($item['Description']) . '">';
+                echo '<input type="hidden" name="cost" value="' . htmlspecialchars($item['Cost']) . '">';
+                echo '<input type="hidden" name="price" value="' . htmlspecialchars($item['Price']) . '">';
+                echo '<p>' . htmlspecialchars($item['Description']) . '</p>'; // Display the description or other details
+                echo '<button type="submit" name="add_to_cart">Add to Cart</button>';
+                echo '</form>';
+            }
+        } else {
+            echo '<p>No results found.</p>';
         }
-        ?>
-    </div>
+    }
+    ?>
+</div>
     <!-- Cart Display -->
 <div class="cart-container">
     <h2>Current Load</h2>

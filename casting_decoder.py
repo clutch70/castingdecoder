@@ -33,7 +33,8 @@ def main():
 
     # Check if the DataFrame has data
     if not filtered_df.empty:
-        print("Filtered DataFrame is not empty. Proceeding to convert to JSON.")
+        pass
+        #print("Filtered DataFrame is not empty. Proceeding to convert to JSON.")
     else:
         print("Filtered DataFrame is empty. Exiting.")
         return
