@@ -71,7 +71,8 @@ if(isset($_POST['add_to_cart'])) {
         $json_output = shell_exec($command);
         echo $json_output;
         $output = json_decode($json_output, true); // Decodes the JSON output to an associative array
-
+        echo 'showing decoded output';
+        echo $output;
         if ($output) {
             foreach ($output as $key => $item) {
                 // Check for special values or missing data
