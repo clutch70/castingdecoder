@@ -157,3 +157,18 @@ header h1 {
     width: 83px; /* Logo width */
     background-color: #808080; /* Background color */
 }
+
+/* Media query for mobile devices */
+@media (max-width: 768px) {
+    .form-container, .cart-container {
+        width: 90%; /* Increase the width on small screens */
+    }
+
+    input, button {
+        padding: 15px; /* Increase the padding to make touch targets larger */
+    }
+
+    form {
+        flex-direction: column; /* Stack form elements vertically */
+    }
+}

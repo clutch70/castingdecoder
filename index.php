@@ -66,6 +66,7 @@ if(isset($_POST['add_to_cart'])) {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1"> <!-- For mobile responsiveness -->
     <title>CCS - Engine Decoder</title>
     <link rel="stylesheet" href="style.css"> <!-- Link to external CSS file -->
 </head>
