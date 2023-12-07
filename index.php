@@ -2,13 +2,19 @@
 session_start(); // Start the session.
 
 // Function to add to cart.
-function addToCart($partNumber, $description, $cost, $price) {
-    $_SESSION['cart'][$partNumber] = [
-        'description' => $description,
-        'cost' => $cost,
-        'price' => $price
-    ];
+function addToCart($partNumber, $description, $cost, $price, $quantity) {
+    if (isset($_SESSION['cart'][$partNumber])) {
+        $_SESSION['cart'][$partNumber]['quantity'] += $quantity;
+    } else {
+        $_SESSION['cart'][$partNumber] = [
+            'description' => $description,
+            'cost' => $cost,
+            'price' => $price,
+            'quantity' => $quantity
+        ];
+    }
 }
+
 
 // Function to clear the cart
 function clearCart() {
@@ -22,12 +28,13 @@ function exportCart() {
     header('Content-Disposition: attachment; filename="cart.csv"');
 
     $output = fopen('php://output', 'w');
-    fputcsv($output, ['Part Number', 'Description', 'Cost', 'Price']); // Column headings
+    fputcsv($output, ['Quantity', 'Part Number', 'Description', 'Cost', 'Price']); // Column headings
 
     // Output the cart items.
     foreach ($_SESSION['cart'] as $partNumber => $item) {
-        fputcsv($output, [$partNumber, $item['description'], $item['cost'], $item['price']]);
-    }
+        fputcsv($output, [$item['quantity'], $partNumber, $item['description'], $item['cost'], $item['price']]);
+}
+
     fclose($output);
     exit();
 }
@@ -46,11 +53,13 @@ if(isset($_POST['clear_cart'])) {
 // Check for add to cart action
 if(isset($_POST['add_to_cart'])) {
     $partNumber = $_POST['part_number'];
-    $description = $_POST['description']; // You'll need to get these details from your form or from the CSV.
+    $description = $_POST['description'];
     $cost = $_POST['cost'];
     $price = $_POST['price'];
-    addToCart($partNumber, $description, $cost, $price);
+    $quantity = $_POST['quantity']; // Retrieve quantity from form
+    addToCart($partNumber, $description, $cost, $price, $quantity);
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -98,6 +107,7 @@ if(isset($_POST['add_to_cart'])) {
                 echo '<input type="hidden" name="price" value="' . htmlspecialchars($price) . '">';
                 // Include Hollander data in the form if necessary
                 echo '<p>' . htmlspecialchars($description) . ' - Hollander: ' . htmlspecialchars($hollander) . '</p>';
+                echo '<input type="number" name="quantity" value="1" min="1">';
                 echo '<button type="submit" name="add_to_cart">Add to Load</button>';
                 echo '</form>';
             }
@@ -114,6 +124,7 @@ if(isset($_POST['add_to_cart'])) {
     <table>
         <thead>
             <tr>
+                <th>Quantity</th>
                 <th>Part Number</th>
                 <th>Description</th>
                 <th>Cost</th>
@@ -124,6 +135,7 @@ if(isset($_POST['add_to_cart'])) {
             <?php if (!empty($_SESSION['cart'])): ?>
                 <?php foreach ($_SESSION['cart'] as $partNumber => $item): ?>
                     <tr>
+                        <td><?php echo htmlspecialchars($item['quantity']); ?></td>
                         <td><?php echo htmlspecialchars($partNumber); ?></td>
                         <td><?php echo htmlspecialchars($item['description']); ?></td>
                         <td><?php echo htmlspecialchars($item['cost']); ?></td>
