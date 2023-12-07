@@ -118,7 +118,7 @@ if(isset($_POST['add_to_cart'])) {
     ?>
 </div>
 
-    <!-- Cart Display -->
+<!-- Cart Display -->
 <div class="cart-container">
     <h2>Current Load</h2>
     <table>
@@ -127,8 +127,6 @@ if(isset($_POST['add_to_cart'])) {
                 <th>Quantity</th>
                 <th>Part Number</th>
                 <th>Description</th>
-                <th>Cost</th>
-                <th>Price</th>
             </tr>
         </thead>
         <tbody>
@@ -138,13 +136,11 @@ if(isset($_POST['add_to_cart'])) {
                         <td><?php echo htmlspecialchars($item['quantity']); ?></td>
                         <td><?php echo htmlspecialchars($partNumber); ?></td>
                         <td><?php echo htmlspecialchars($item['description']); ?></td>
-                        <td><?php echo htmlspecialchars($item['cost']); ?></td>
-                        <td><?php echo htmlspecialchars($item['price']); ?></td>
                     </tr>
                 <?php endforeach; ?>
             <?php else: ?>
                 <tr>
-                    <td colspan="4">Your cart is empty.</td>
+                    <td colspan="3">Your cart is empty.</td>
                 </tr>
             <?php endif; ?>
         </tbody>
