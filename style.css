@@ -132,3 +132,19 @@ header h1 {
     margin-left: 20px; /* Add spacing between the logo and the title */
     text-align: left;
 }
+
+.footer-logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    position: fixed; /* Keeps the logo at the bottom of the page */
+    bottom: 0; /* Aligns it to the very bottom */
+    background-color: #D2CA8A; /* Background color, change as needed */
+    padding: 10px 0; /* Padding above and below the logo */
+}
+
+.footer-logo a img {
+    height: 54px; /* Logo height */
+    width: 83px; /* Logo width */
+}

@@ -158,5 +158,10 @@ if(isset($_POST['add_to_cart'])) {
 
     <a href="?action=export">Export as CSV</a>
 </div>
+<div class="footer-logo">
+        <a href="http://decode.custardcore.com">
+            <img src="logo.png" alt="Custard Core Logo">
+        </a>
+    </div>
 </body>
 </html>
