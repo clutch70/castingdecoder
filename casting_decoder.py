@@ -2,6 +2,7 @@ import sys
 import pandas as pd
 import json
 
+
 # Function to get search terms
 def get_search_terms():
     if len(sys.argv) > 1:
@@ -14,12 +15,14 @@ def get_search_terms():
     # Split the search string into terms
     return search_string.split()
 
-def main():
+
+def main(search_terms=None):
     # Load the CSV file
     df = pd.read_csv('bom.csv')
 
     # Get search terms from command line arguments or user input
-    search_terms = get_search_terms()
+    if search_terms is None:
+        search_terms = get_search_terms()
 
     # Start with a mask that selects everything
     mask = pd.Series([True] * len(df))
@@ -34,7 +37,7 @@ def main():
     # Check if the DataFrame has data
     if not filtered_df.empty:
         pass
-        #print("Filtered DataFrame is not empty. Proceeding to convert to JSON.")
+        # print("Filtered DataFrame is not empty. Proceeding to convert to JSON.")
     else:
         print("Filtered DataFrame is empty. Exiting.")
         return
@@ -44,6 +47,9 @@ def main():
 
     # Convert the dictionary to a JSON string and print
     print(json.dumps(parts_dict, indent=4))
+
+    return parts_dict
+
 
 if __name__ == '__main__':
     main()
