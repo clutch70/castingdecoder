@@ -76,7 +76,7 @@ if(isset($_POST['add_to_cart'])) {
     <div class="form-container">
         <div class="instructions">
             <h2>Instructions:</h2>
-            <p>Enter the details of the core.</p>
+            <p>Enter the details of the core/Ingresa los detalles.</p>
         </div>
         <form action="" method="post">
             <input type="text" name="search_terms" placeholder="example/ejemplo: 3C3E FORD 2l3e 6.8L">
