@@ -79,7 +79,7 @@ if(isset($_POST['add_to_cart'])) {
             <p>Enter the details of the core.</p>
         </div>
         <form action="" method="post">
-            <input type="text" name="search_terms" placeholder="example: 3C3E FORD 2l3e 6.8L">
+            <input type="text" name="search_terms" placeholder="example/ejemplo: 3C3E FORD 2l3e 6.8L">
             <button type="submit" name="submit">Search</button>
         </form>
     </div>
