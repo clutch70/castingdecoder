@@ -91,7 +91,9 @@ if(isset($_POST['add_to_cart'])) {
         $json_output = shell_exec($command);
         $json_output = str_replace('NaN', 'null', $json_output);
         $output = json_decode($json_output, true); // Decodes the JSON output to an associative array
+        $result_count = count($output); // Count the number of results
         if ($output) {
+            echo '<p>Number of results: ' . $result_count . '</p>'; // Display the number of results
             foreach ($output as $key => $item) {
                 // Check for special values or missing data
                 $partNumber = isset($item['PartNumber']) ? $item['PartNumber'] : 'N/A';
