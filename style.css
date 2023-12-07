@@ -8,8 +8,10 @@ body {
 header {
     background-color: #D2CA8A;
     color: white;
-    text-align: center;
     padding: 20px 0;
+    display: flex;
+    align-items: center;
+    justify-content: start;
 }
 
 .form-container {
@@ -118,4 +120,15 @@ a {
 
 a:hover {
     background-color: #b8b068;
+}
+
+header a img {
+    height: 54px; /* height of the logo */
+    width: 83px; /* width of the logo */
+    margin-left: 20px; /* adjust as needed for spacing */
+}
+
+header h1 {
+    margin-left: 20px; /* Add spacing between the logo and the title */
+    text-align: left;
 }

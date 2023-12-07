@@ -71,6 +71,9 @@ if(isset($_POST['add_to_cart'])) {
 </head>
 <body>
     <header>
+        <a href="http://decode.custardcore.com">
+        <img src="logo.png" alt="Custard Core Logo">
+        </a>
         <h1>Custard Core Engine Decoder</h1>
     </header>
     <div class="form-container">
