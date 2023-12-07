@@ -25,7 +25,7 @@ function clearCart() {
 // Function to export cart.
 function exportCart() {
     header('Content-Type: text/csv');
-    header('Content-Disposition: attachment; filename="cart.csv"');
+    header('Content-Disposition: attachment; filename="current_load.csv"');
 
     $output = fopen('php://output', 'w');
     fputcsv($output, ['Quantity', 'Part Number', 'Description', 'Cost', 'Price']); // Column headings
@@ -76,10 +76,10 @@ if(isset($_POST['add_to_cart'])) {
     <div class="form-container">
         <div class="instructions">
             <h2>Instructions:</h2>
-            <p>Enter search terms to find in the CSV description field.</p>
+            <p>Enter the details of the core.</p>
         </div>
         <form action="" method="post">
-            <input type="text" name="search_terms" placeholder="Enter terms...">
+            <input type="text" name="search_terms" placeholder="example: 3C3E FORD 2L3E 6.8L">
             <button type="submit" name="submit">Search</button>
         </form>
     </div>
