@@ -79,7 +79,7 @@ if(isset($_POST['add_to_cart'])) {
             <p>Enter the details of the core/Ingresa los detalles.</p>
         </div>
         <form action="" method="post">
-            <input type="text" name="search_terms" placeholder="example/ejemplo: 3C3E FORD 2l3e 6.8L">
+            <input type="text" name="search_terms" placeholder="example/ejemplo: 3C3E FORD 2l3e 6.8L" value="<?php echo isset($_POST['search_terms']) ? htmlspecialchars($_POST['search_terms']) : ''; ?>">
             <button type="submit" name="submit">Search</button>
         </form>
     </div>
