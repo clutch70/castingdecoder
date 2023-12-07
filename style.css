@@ -140,6 +140,7 @@ header h1 {
     position: fixed; /* Keeps the logo at the bottom of the page */
     bottom: 0; /* Aligns it to the very bottom */
     padding: 10px 0; /* Padding above and below the logo */
+    background-color: #808080; /* Background color */
 }
 
 .footer-logo a img {
