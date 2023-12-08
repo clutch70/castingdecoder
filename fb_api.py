@@ -264,6 +264,7 @@ def get_po_id(po_number, token=None):
 
 def create_po_item(po_number, new_items_dict=None, token=None):
     # logger.debug(f"create_part got {part_dict}")
+    own_login = False
     if not token:
         token = fb_login()
         own_login = True
@@ -299,11 +300,14 @@ def create_po_item(po_number, new_items_dict=None, token=None):
         # logger.debug(f"FB part creation response is {response.content}")
         # print(f"Logging out {token}")
         # logger.debug(f"Logging out {token}")
-        fb_logout(token)
+        if own_login:
+            fb_logout(token)
         response.raise_for_status()
 
         return response.content
     except Exception as e:
+        if own_login:
+            fb_logout(token)
         logger.error(e, exc_info=True)
 
 
@@ -387,6 +391,8 @@ def query_fb(query, column, token=None):
         return reply
 
     except Exception as e:
+        if own_login:
+            fb_logout(token)
         logger.error(f"Failed to query Fishbowl for with query {query} with error {e}.")
 
 def get_part_description(part_number, token=None):
