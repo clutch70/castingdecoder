@@ -4,6 +4,7 @@ import logging
 import time
 from requests.exceptions import HTTPError
 import json
+import csv
 
 # Setup Logging
 logger = logging.getLogger('main')
@@ -417,6 +418,43 @@ def get_part_description(part_number, token=None):
 
     except Exception as e:
         logger.error(f"Failed to get description in Fishbowl for part {part_number} with error {e}.")
+
+
+def generate_bom_csv():
+    # Define the API endpoint and headers
+    api_endpoint = 'api/data-query'
+    headers = {
+        "Authorization": f"Bearer {fb_login()}",
+        "Content-Type": "text/plain"
+    }
+
+    # Define the SQL query
+    query = """
+    SELECT 
+        num,
+        Description,
+        Details,
+        JSON_UNQUOTE(JSON_EXTRACT(customFields, '$."14".value')) AS Hollander,
+        JSON_UNQUOTE(JSON_EXTRACT(customFields, '$."2".value')) AS OEM
+    FROM 
+        part
+    WHERE
+        num like 'ENG-%'
+    """
+
+    # Make the API request
+    response = requests.get(f"{k.fb_url}/{api_endpoint}", headers=headers, data=query)
+    data = response.json()
+
+    # Write the data to bom.csv
+    with open('bom.csv', 'w', newline='') as csvfile:
+        fieldnames = ['PartNumber', 'Description', 'Details', 'Hollander', 'OEM']
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+        writer.writeheader()
+        for row in data:
+            row['PartNumber'] = row.pop('num')
+            writer.writerow(row)
 
 def main():
     #token = fb_login()

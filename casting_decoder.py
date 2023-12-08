@@ -1,7 +1,7 @@
 import sys
 import pandas as pd
 import json
-
+import fb_api
 
 # Function to get search terms
 def get_search_terms():
@@ -52,4 +52,5 @@ def main(search_terms=None):
 
 
 if __name__ == '__main__':
+    fb_api.generate_bom_csv()
     main()
