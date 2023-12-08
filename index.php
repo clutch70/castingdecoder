@@ -160,7 +160,7 @@ if(isset($_POST['add_to_cart'])) {
     </form>
 </div>
 <div class="footer-logo">
-        <a href="http://decode.custardcore.com">
+        <a href="/">
             <img src="logo.png" alt="Custard Core Logo">
         </a>
     </div>
