@@ -111,7 +111,7 @@ if(isset($_POST['add_to_cart'])) {
                 echo '<input type="hidden" name="price" value="' . htmlspecialchars($price) . '">';
                 // Include Hollander data in the form if necessary
                 echo '<p>Description - ' . htmlspecialchars($description) . '</p>';
-                echo '<p>Details - ' . htmlspecialchars($hollander) . '</p>';
+                echo '<p>Hollander - ' . htmlspecialchars($hollander) . '</p>';
                 echo '<p>Details - ' . htmlspecialchars($details) . '</p>';
                 echo '<input type="number" name="quantity" value="1" min="1">';
                 echo '<button type="submit" name="add_to_cart">Add to Load</button>';
