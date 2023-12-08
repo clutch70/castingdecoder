@@ -99,6 +99,7 @@ if(isset($_POST['add_to_cart'])) {
                 // Check for special values or missing data
                 $partNumber = isset($item['PartNumber']) ? $item['PartNumber'] : 'N/A';
                 $description = isset($item['Description']) ? $item['Description'] : 'No description available';
+                $details = isset($item['Details']) ? $item['Details'] : 'N/A';
                 $cost = (isset($item['Cost']) && is_numeric($item['Cost'])) ? $item['Cost'] : '0';
                 $price = (isset($item['Price']) && is_numeric($item['Price'])) ? $item['Price'] : '0';
                 $hollander = isset($item['Hollander']) ? $item['Hollander'] : 'N/A'; // Handling for Hollander column
@@ -109,7 +110,7 @@ if(isset($_POST['add_to_cart'])) {
                 echo '<input type="hidden" name="cost" value="' . htmlspecialchars($cost) . '">';
                 echo '<input type="hidden" name="price" value="' . htmlspecialchars($price) . '">';
                 // Include Hollander data in the form if necessary
-                echo '<p>' . htmlspecialchars($description) . ' - Hollander: ' . htmlspecialchars($hollander) . '</p>';
+                echo '<p>' . htmlspecialchars($description) . ' - Hollander: ' . htmlspecialchars($hollander) . ' - Details: ' . htmlspecialchars($details) .'</p>';
                 echo '<input type="number" name="quantity" value="1" min="1">';
                 echo '<button type="submit" name="add_to_cart">Add to Load</button>';
                 echo '</form>';
