@@ -1,6 +1,11 @@
 <?php
 session_start(); // Start the session.
 
+// Initialize the cart if it's not already set
+if (!isset($_SESSION['cart'])) {
+    $_SESSION['cart'] = array();
+}
+
 // Function to add to cart.
 function addToCart($partNumber, $description, $cost, $price, $quantity) {
     if (isset($_SESSION['cart'][$partNumber])) {
@@ -92,7 +97,7 @@ if(isset($_POST['add_to_cart'])) {
         $json_output = shell_exec($command);
         $json_output = str_replace('NaN', 'null', $json_output);
         $output = json_decode($json_output, true); // Decodes the JSON output to an associative array
-        $result_count = count($output); // Count the number of results
+        $result_count = is_array($output) ? count($output) : 0;
         if ($output) {
             echo '<p>Number of results: ' . $result_count . '</p>'; // Display the number of results
             foreach ($output as $key => $item) {
