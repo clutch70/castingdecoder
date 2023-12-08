@@ -387,6 +387,7 @@ def query_fb(query, column, token=None):
         logger.error(f"Failed to query Fishbowl for with query {query} with error {e}.")
 
 def get_part_description(part_number, token=None):
+    own_login = False
     if not token:
         token = fb_login()
         own_login = True
@@ -445,6 +446,8 @@ def generate_bom_csv():
 
     # Make the API request
     response = requests.get(f"{k.fb_url}/{api_endpoint}", headers=headers, data=query)
+    fb_logout(token)
+    logger.debug(f"generate_bom_csv response is {response.content}")
     data = response.json()
 
     # Write the data to bom.csv
@@ -456,7 +459,7 @@ def generate_bom_csv():
         for row in data:
             row['PartNumber'] = row.pop('num')
             writer.writerow(row)
-    fb_logout(token)
+
 
 def main():
     #token = fb_login()
