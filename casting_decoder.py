@@ -2,6 +2,21 @@ import sys
 import pandas as pd
 import json
 import fb_api
+import logging
+
+# Setup Logging
+logger = logging.getLogger('main')
+logger.setLevel(logging.DEBUG)
+chandler = logging.StreamHandler()
+chandler.setLevel(logging.INFO)
+cfh = logging.FileHandler('common.log', encoding='utf-8')
+cfh.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+chandler.setFormatter(formatter)
+cfh.setFormatter(formatter)
+logger.addHandler(chandler)
+logger.addHandler(cfh)
+
 
 # Function to get search terms
 def get_search_terms():
