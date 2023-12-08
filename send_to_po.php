@@ -8,9 +8,12 @@ $po_number_escaped = escapeshellarg($po_number);
 
 // Call the Python script with the cart data and the PO Number as arguments
 $command = "python3 add_po_item.py $po_number_escaped $cart_data_escaped";
-echo $command;
 $output = shell_exec($command);
-echo $output;
 
-// Handle the output...
+// Clear the cart
+$_SESSION['cart'] = [];
+
+// Redirect back to index.php
+header('Location: index.php');
+exit;
 ?>
