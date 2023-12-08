@@ -422,9 +422,10 @@ def get_part_description(part_number, token=None):
 
 def generate_bom_csv():
     # Define the API endpoint and headers
+    token = fb_login()
     api_endpoint = 'api/data-query'
     headers = {
-        "Authorization": f"Bearer {fb_login()}",
+        "Authorization": f"Bearer {token}",
         "Content-Type": "text/plain"
     }
 
@@ -455,6 +456,7 @@ def generate_bom_csv():
         for row in data:
             row['PartNumber'] = row.pop('num')
             writer.writerow(row)
+    fb_logout(token)
 
 def main():
     #token = fb_login()
