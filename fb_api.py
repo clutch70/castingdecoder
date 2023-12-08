@@ -304,7 +304,7 @@ def create_po_item(po_number, new_items_dict=None, token=None):
 
         return response.content
     except Exception as e:
-        logger.error(e)
+        logger.error(e, exc_info=True)
 
 
 def construct_po_items(json_obj, part_quantity_dict, token=None):
