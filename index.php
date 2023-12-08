@@ -168,20 +168,14 @@ if(isset($_POST['add_to_cart'])) {
 </html>
 <script>
     var cart = <?php echo json_encode($_SESSION['cart']); ?>;
-</script>
-<script>
-document.getElementById('sendToPoButton').addEventListener('click', function() {
 
-    // Get the cart data and convert it to a JSON string
+    document.getElementById('sendToPoButton').addEventListener('click', function() {
+        var cartData = JSON.stringify(cart);
+        document.getElementById('cartDataInput').value = cartData;
 
-    var cartData = JSON.stringify(cart);  // Replace 'cart' with your cart variable
-    document.getElementById('cartDataInput').value = cartData;
+        var poNumber = prompt("Please enter the PO Number:");
+        document.getElementById('poNumberInput').value = poNumber;
 
-    // Show a prompt asking the user for the PO Number
-    var poNumber = prompt("Please enter the PO Number:");
-    document.getElementById('poNumberInput').value = poNumber;
-
-    // Submit the form
-    document.getElementById('sendToPoForm').submit();
-});
+        document.getElementById('sendToPoForm').submit();
+    });
 </script>
