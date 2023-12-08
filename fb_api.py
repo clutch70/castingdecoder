@@ -318,6 +318,8 @@ def construct_po_items(json_obj, part_quantity_dict, token=None):
         logger.debug(f"construct_po_items got description {str(description)}")
         unit_cost = query_fb(f"SELECT stdCost from part where num = '{part}'", 'stdCost', token=token)
         unit_cost = int(float(unit_cost))
+        logger.debug(f"quantity is {quantity}")
+        logger.debug(f"unit_cost is {unit_cost}")
         total_cost = unit_cost * quantity
         logger.debug(f"construct_po_items got unit_cost {str(unit_cost)}")
         part_id = query_fb(f"SELECT id from part where num = '{part}'", 'id', token=token)
