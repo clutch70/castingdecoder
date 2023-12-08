@@ -313,16 +313,17 @@ def construct_po_items(json_obj, part_quantity_dict, token=None):
 
     po_items = []
     next_line_number = len(existing_po_items) + 1 if existing_po_items else 1
-    for part, quantity in part_quantity_dict.items():
+    for part, part_details in part_quantity_dict.items():
         description = query_fb(f"SELECT description from part where num = '{part}'", 'description', token=token)
-        logger.debug(f"construct_po_items got description {str(description)}")
         unit_cost = query_fb(f"SELECT stdCost from part where num = '{part}'", 'stdCost', token=token)
         unit_cost = int(float(unit_cost))
-        logger.debug(f"quantity is {quantity}")
-        logger.debug(f"unit_cost is {unit_cost}")
+
+        # Extract the quantity from the part details dictionary
+        quantity = int(part_details['quantity'])
+
         total_cost = unit_cost * quantity
-        logger.debug(f"construct_po_items got unit_cost {str(unit_cost)}")
         part_id = query_fb(f"SELECT id from part where num = '{part}'", 'id', token=token)
+
         # Create a new poItem with the same keys as the provided JSON, but with all values set to an empty string or
         # an appropriate empty value
         po_item = {
