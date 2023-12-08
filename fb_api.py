@@ -23,6 +23,7 @@ logout_url = 'api/logout'
 part_search_url = 'api/parts/?number='
 part_create_uri = 'api/import/Part'
 po_add_item_uri = 'api/purchaseorder/additem'
+po_uri = 'api/purchase-orders'
 data_query_uri = 'api/data-query'
 
 login_exceeded_message = 'The login limit'
@@ -259,6 +260,163 @@ def get_po_id(po_number, token=None):
     except Exception as e:
         logger.error(f"Failed to get PO ID in Fishbowl {po_number} for error {e}.")
 
+
+def create_po_item(po_number, new_items_dict=None, token=None):
+    # logger.debug(f"create_part got {part_dict}")
+    if not token:
+        token = fb_login()
+        own_login = True
+
+    if token:
+        pass
+    else:
+        return False
+
+    po_id = query_fb(f"SELECT id from po where num = '{po_number}'", 'id', token=token)
+    logger.debug(f"Got PO ID {po_id} for PO {po_number}")
+
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "text/plain"
+    }
+    post_headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json"
+    }
+    try:
+        response = requests.get(f"{k.fb_url}/{po_uri}/{po_id}", headers=headers)
+        # print(f"FB part creation response is {response.content}")
+        # pprint(response.content)
+        response_content = response.content.decode()
+        po = json.loads(response_content)
+        po = construct_po_items(po, new_items_dict, token=token)
+        logger.debug(po)
+        response = requests.post(f"{k.fb_url}/{po_uri}/{po_id}", headers=post_headers, data=json.dumps(po))
+        logger.debug(response.content)
+        # id_value = api_data[0]['id']
+        # print(id_value)
+        # logger.debug(f"FB part creation response is {response.content}")
+        # print(f"Logging out {token}")
+        # logger.debug(f"Logging out {token}")
+        fb_logout(token)
+        response.raise_for_status()
+
+        return response.content
+    except Exception as e:
+        logger.error(e)
+
+
+def construct_po_items(json_obj, part_quantity_dict, token=None):
+    # Extract the existing poItems list from the JSON object
+    existing_po_items = json_obj.get('poItems', [])
+
+    po_items = []
+    next_line_number = len(existing_po_items) + 1 if existing_po_items else 1
+    for part, quantity in part_quantity_dict.items():
+        description = query_fb(f"SELECT description from part where num = '{part}'", 'description', token=token)
+        logger.debug(f"construct_po_items got description {str(description)}")
+        unit_cost = query_fb(f"SELECT stdCost from part where num = '{part}'", 'stdCost', token=token)
+        unit_cost = int(float(unit_cost))
+        total_cost = unit_cost * quantity
+        logger.debug(f"construct_po_items got unit_cost {str(unit_cost)}")
+        part_id = query_fb(f"SELECT id from part where num = '{part}'", 'id', token=token)
+        # Create a new poItem with the same keys as the provided JSON, but with all values set to an empty string or
+        # an appropriate empty value
+        po_item = {
+            "class": {"id": "", "name": ""},
+            "customFields": [],
+            "dateLastFulfilled": "",
+            "dateScheduled": "",
+            "id": "",
+            "lineNumber": next_line_number,
+            "mcTotalCost": "",
+            "mcTotalTax": "",
+            "note": "",
+            "part": {"name": part, "id": part_id, "description": f"{description}"},
+            "quantity": str(quantity),
+            "quantityFulfilled": "",
+            "quantityPicked": "",
+            "revision": "",
+            "status": "",
+            "totalCost": total_cost,
+            "totalTax": "",
+            "type": {"id": 10, "name": "Purchase"},
+            "unitCost": unit_cost,
+            "uom": {"abbreviation": "ea", "id": 1, "name": "Each"},
+            "vendorPartNumber": ""
+        }
+        next_line_number += 1
+        po_items.append(po_item)
+
+    # Add the new poItems to the existing poItems list in the JSON object
+    json_obj['poItems'] = existing_po_items + po_items
+
+    return json_obj
+
+def query_fb(query, column, token=None):
+    own_login = False
+    if not token:
+        token = fb_login()
+        own_login = True
+
+    if token:
+        pass
+    else:
+        return False
+
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "text/plain"
+    }
+
+    try:
+        response = requests.get(f"{k.fb_url}/{data_query_uri}", headers=headers, data=query)
+        logger.debug(response.content)
+        response_content = response.content.decode()
+
+        api_data = json.loads(response_content)
+        reply = api_data[0][column]  # Access the first item in the list and the value of the column key
+        if own_login:
+            fb_logout(token)
+        response.raise_for_status()
+        logger.debug(f"query_fb returned {reply}")
+        return reply
+
+    except Exception as e:
+        logger.error(f"Failed to query Fishbowl for with query {query} with error {e}.")
+
+def get_part_description(part_number, token=None):
+    if not token:
+        token = fb_login()
+        own_login = True
+
+    if token:
+        pass
+    else:
+        return False
+
+
+
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "text/plain"
+    }
+
+    data = f'SELECT description from part where num = {part_number}'
+
+    try:
+        response = requests.get(f"{k.fb_url}/{data_query_uri}", headers=headers, data=data)
+        response_content = response.content.decode()
+        api_data = json.loads(response_content)
+        reply = api_data[0]['num']
+        if own_login:
+            fb_logout(token)
+        response.raise_for_status()
+
+        return reply
+
+    except Exception as e:
+        logger.error(f"Failed to get description in Fishbowl for part {part_number} with error {e}.")
 
 def main():
     #token = fb_login()

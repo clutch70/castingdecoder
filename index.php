@@ -153,6 +153,11 @@ if(isset($_POST['add_to_cart'])) {
     </form>
 
     <a href="?action=export">Export as CSV</a>
+    <form action="send_to_po.php" method="post" id="sendToPoForm">
+        <input type="hidden" name="cart_data" id="cartDataInput">
+        <input type="hidden" name="po_number" id="poNumberInput">
+        <button type="button" id="sendToPoButton">Send To PO</button>
+    </form>
 </div>
 <div class="footer-logo">
         <a href="http://decode.custardcore.com">
@@ -161,3 +166,19 @@ if(isset($_POST['add_to_cart'])) {
     </div>
 </body>
 </html>
+<script>
+document.getElementById('sendToPoButton').addEventListener('click', function() {
+
+    // Get the cart data and convert it to a JSON string
+    var cart = <?php echo json_encode($_SESSION['cart']); ?>;
+    var cartData = JSON.stringify(cart);  // Replace 'cart' with your cart variable
+    document.getElementById('cartDataInput').value = cartData;
+
+    // Show a prompt asking the user for the PO Number
+    var poNumber = prompt("Please enter the PO Number:");
+    document.getElementById('poNumberInput').value = poNumber;
+
+    // Submit the form
+    document.getElementById('sendToPoForm').submit();
+});
+</script>
