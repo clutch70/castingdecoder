@@ -18,6 +18,7 @@ def get_search_terms():
 
 def main(search_terms=None):
     # Load the CSV file
+    fb_api.generate_bom_csv()
     df = pd.read_csv('bom.csv')
 
     # Get search terms from command line arguments or user input
@@ -52,5 +53,4 @@ def main(search_terms=None):
 
 
 if __name__ == '__main__':
-    fb_api.generate_bom_csv()
     main()
