@@ -142,3 +142,4 @@ cython_debug/
 /bom.csv
 bom.csv
 working.py
+config.ini
