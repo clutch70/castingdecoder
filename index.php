@@ -64,6 +64,7 @@ function emailCart($application_id, $directory_id, $secret_value) {
     $provider = new GenericProvider([
         'clientId'                => $application_id,
         'clientSecret'            => $secret_value,
+        'redirectUri'             => 'http://decode.cusnet.net',
         'urlAuthorize'            => 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize',
         'urlAccessToken'          => "https://login.microsoftonline.com/$directory_id/oauth2/v2.0/token",
         'urlResourceOwnerDetails' => '',
