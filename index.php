@@ -12,6 +12,8 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 use League\OAuth2\Client\Provider\GenericProvider;
+require 'vendor/autoload.php';
+require_once '/var/www/castingdecoder/vendor/autoload.php';
 
 
 // Initialize the cart if it's not already set
