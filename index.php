@@ -44,6 +44,12 @@ function exportCart() {
     exit();
 }
 
+// Check for remove from cart action
+if(isset($_POST['remove_from_cart'])) {
+    $partNumber = $_POST['part_number'];
+    unset($_SESSION['cart'][$partNumber]);
+}
+
 // Check for export action
 if(isset($_GET['action']) && $_GET['action'] == 'export') {
     exportCart();
@@ -147,12 +153,19 @@ if(isset($_POST['add_to_cart'])) {
                         <td><?php echo htmlspecialchars($item['quantity']); ?></td>
                         <td><?php echo htmlspecialchars($partNumber); ?></td>
                         <td><?php echo htmlspecialchars($item['description']); ?></td>
+                        <td>
+                            <form action="" method="post">
+                                <input type="hidden" name="part_number" value="<?php echo htmlspecialchars($partNumber); ?>">
+                                <button type="submit" name="remove_from_cart">Remove</button>
+                            </form>
+                        </td>
                     </tr>
                 <?php endforeach; ?>
-            <?php else: ?>
-                <tr>
-                    <td colspan="3">Your cart is empty.</td>
-                </tr>
+<?php else: ?>
+    <tr>
+        <td colspan="4">Your cart is empty.</td>
+    </tr>
+<?php endif; ?>
             <?php endif; ?>
         </tbody>
     </table>

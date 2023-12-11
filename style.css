@@ -158,6 +158,19 @@ header h1 {
     background-color: #808080; /* Background color */
 }
 
+/* Add styles for the remove button */
+button[name="remove_from_cart"] {
+    background-color: #D2CA8A;
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 5px 10px;
+}
+
+button[name="remove_from_cart"]:hover {
+    background-color: #b8b068;
+}
+
 /* Media query for mobile devices */
 @media (max-width: 768px) {
     .form-container, .cart-container {
