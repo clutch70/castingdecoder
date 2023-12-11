@@ -140,3 +140,5 @@ cython_debug/
 
 /keys.py
 /bom.csv
+bom.csv
+working.py
