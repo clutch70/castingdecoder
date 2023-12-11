@@ -13,7 +13,7 @@ use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 use League\OAuth2\Client\Provider\GenericProvider;
 require 'vendor/autoload.php';
-require_once '/var/www/castingdecoder/vendor/autoload.php';
+
 
 
 // Initialize the cart if it's not already set
@@ -60,7 +60,7 @@ function exportCart() {
 }
 
 // Function to email cart.
-function emailCart() {
+function emailCart($application_id, $directory_id, $secret_value) {
     // OAuth 2.0 settings
     $provider = new GenericProvider([
         'clientId'                => $application_id,
@@ -122,8 +122,9 @@ function emailCart() {
 
 // Check for email cart action
 if(isset($_GET['action']) && $_GET['action'] == 'email') {
-    emailCart();
+    emailCart($application_id, $directory_id, $secret_value);
 }
+
 
 
 // Check for remove from cart action
