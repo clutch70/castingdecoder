@@ -171,6 +171,20 @@ button[name="remove_from_cart"]:hover {
     background-color: #b8b068;
 }
 
+/* Add styles for the increase and decrease buttons */
+button[name="increase_quantity"], button[name="decrease_quantity"] {
+    background-color: #D2CA8A;
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 5px 10px;
+    margin: 0 5px;
+}
+
+button[name="increase_quantity"]:hover, button[name="decrease_quantity"]:hover {
+    background-color: #b8b068;
+}
+
 /* Media query for mobile devices */
 @media (max-width: 768px) {
     .form-container, .cart-container {
@@ -185,3 +199,4 @@ button[name="remove_from_cart"]:hover {
         flex-direction: column; /* Stack form elements vertically */
     }
 }
+

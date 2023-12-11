@@ -60,6 +60,20 @@ if(isset($_POST['clear_cart'])) {
     clearCart();
 }
 
+// Check for increase quantity action
+if(isset($_POST['increase_quantity'])) {
+    $partNumber = $_POST['part_number'];
+    $_SESSION['cart'][$partNumber]['quantity'] += 1;
+}
+
+// Check for decrease quantity action
+if(isset($_POST['decrease_quantity'])) {
+    $partNumber = $_POST['part_number'];
+    $_SESSION['cart'][$partNumber]['quantity'] -= 1;
+    if ($_SESSION['cart'][$partNumber]['quantity'] <= 0) {
+        unset($_SESSION['cart'][$partNumber]);
+    }
+}
 
 // Check for add to cart action
 if(isset($_POST['add_to_cart'])) {
@@ -150,7 +164,14 @@ if(isset($_POST['add_to_cart'])) {
             <?php if (!empty($_SESSION['cart'])): ?>
                 <?php foreach ($_SESSION['cart'] as $partNumber => $item): ?>
                     <tr>
-                        <td><?php echo htmlspecialchars($item['quantity']); ?></td>
+                        <td>
+                            <form action="" method="post">
+                                <input type="hidden" name="part_number" value="<?php echo htmlspecialchars($partNumber); ?>">
+                                <button type="submit" name="decrease_quantity">-</button>
+                                <?php echo htmlspecialchars($item['quantity']); ?>
+                                <button type="submit" name="increase_quantity">+</button>
+                            </form>
+                        </td>
                         <td><?php echo htmlspecialchars($partNumber); ?></td>
                         <td><?php echo htmlspecialchars($item['description']); ?></td>
                         <td>
