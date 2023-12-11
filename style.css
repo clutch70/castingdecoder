@@ -199,6 +199,12 @@ button[name="decrease_quantity"]:hover {
     background-color: #d32f2f; /* Darker red */
 }
 
+td {
+    padding: 10px;
+    text-align: center; /* Align the text to the center */
+    background-color: #fff;
+}
+
 /* Media query for mobile devices */
 @media (max-width: 768px) {
     .form-container, .cart-container {
