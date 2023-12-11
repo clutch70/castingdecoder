@@ -63,20 +63,15 @@ if(isset($_POST['clear_cart'])) {
 // Check for increase quantity action
 if(isset($_POST['increase_quantity'])) {
     $partNumber = $_POST['part_number'];
-    if (is_numeric($_SESSION['cart'][$partNumber]['quantity']) && $_SESSION['cart'][$partNumber]['quantity'] > 0) {
-        $_SESSION['cart'][$partNumber]['quantity'] += 1;
-    } else {
-        echo '<p>Error: Quantity must be a positive integer.</p>';
-    }
+    $_SESSION['cart'][$partNumber]['quantity'] += 1;
 }
 
 // Check for decrease quantity action
 if(isset($_POST['decrease_quantity'])) {
     $partNumber = $_POST['part_number'];
-    if (is_numeric($_SESSION['cart'][$partNumber]['quantity']) && $_SESSION['cart'][$partNumber]['quantity'] > 1) {
-        $_SESSION['cart'][$partNumber]['quantity'] -= 1;
-    } else {
-        echo '<p>Error: Quantity must be a positive integer.</p>';
+    $_SESSION['cart'][$partNumber]['quantity'] -= 1;
+    if ($_SESSION['cart'][$partNumber]['quantity'] <= 0) {
+        unset($_SESSION['cart'][$partNumber]);
     }
 }
 
@@ -203,7 +198,7 @@ if(isset($_POST['add_to_cart'])) {
     <form action="send_to_po.php" method="post" id="sendToPoForm">
         <input type="hidden" name="cart_data" id="cartDataInput">
         <input type="hidden" name="po_number" id="poNumberInput">
-        <button type="button" id="sendToPoButton">Send To PO</button> <button type="button" id="receiveToPoButton">Receive To PO</button>
+        <button type="button" id="sendToPoButton">Send To PO</button>
     </form>
 </div>
 <div class="footer-logo">
@@ -224,16 +219,5 @@ if(isset($_POST['add_to_cart'])) {
         document.getElementById('poNumberInput').value = poNumber;
 
         document.getElementById('sendToPoForm').submit();
-    });
-
-    document.getElementById('receiveToPoButton').addEventListener('click', function() {
-        var cartData = JSON.stringify(cart);
-        var poNumber = document.getElementById('poNumberInput').value;
-
-        // Send a POST request to receive_to_po.php with the cart data and PO number
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', 'receive_to_po.php', true);
-        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        xhr.send('cart_data=' + encodeURIComponent(cartData) + '&po_number=' + encodeURIComponent(poNumber));
     });
 </script>
