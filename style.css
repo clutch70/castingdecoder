@@ -171,9 +171,9 @@ button[name="remove_from_cart"]:hover {
     background-color: #b8b068;
 }
 
-/* Add styles for the increase and decrease buttons */
-button[name="increase_quantity"], button[name="decrease_quantity"] {
-    background-color: #D2CA8A;
+/* Add styles for the increase button */
+button[name="increase_quantity"] {
+    background-color: #4CAF50; /* Green */
     color: white;
     border: none;
     cursor: pointer;
@@ -181,8 +181,22 @@ button[name="increase_quantity"], button[name="decrease_quantity"] {
     margin: 0 5px;
 }
 
-button[name="increase_quantity"]:hover, button[name="decrease_quantity"]:hover {
-    background-color: #b8b068;
+button[name="increase_quantity"]:hover {
+    background-color: #45a049; /* Darker green */
+}
+
+/* Add styles for the decrease button */
+button[name="decrease_quantity"] {
+    background-color: #f44336; /* Red */
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 5px 10px;
+    margin: 0 5px;
+}
+
+button[name="decrease_quantity"]:hover {
+    background-color: #d32f2f; /* Darker red */
 }
 
 /* Media query for mobile devices */
