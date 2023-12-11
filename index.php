@@ -1,11 +1,6 @@
 <?php
 $config = parse_ini_file('config.ini');
 
-// Access the values
-$application_id = $config['application_id'];
-$directory_id = $config['directory_id'];
-$secret_value = $config['secret_value'];
-
 session_start(); // Start the session.
 
 use PHPMailer\PHPMailer\PHPMailer;
@@ -72,7 +67,13 @@ function emailCart($application_id, $directory_id, $secret_value) {
     ]);
 
     // Get OAuth 2.0 token
-    $accessToken = $provider->getAccessToken('client_credentials');
+    try {
+        $accessToken = $provider->getAccessToken('client_credentials');
+    } catch (Exception $e) {
+        error_log('Error getting access token: ' . $e->getMessage());
+        echo 'Error getting access token: ',  $e->getMessage(), "\n";
+        return;
+    }
 
     // PHPMailer setup
     $mail = new PHPMailer(true);
@@ -116,6 +117,7 @@ function emailCart($application_id, $directory_id, $secret_value) {
         $mail->send();
         echo 'Message has been sent';
     } catch (Exception $e) {
+        error_log('Error sending email: ' . $e->getMessage());
         echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
     }
 }
