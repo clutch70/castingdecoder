@@ -278,7 +278,7 @@ if(isset($_POST['add_to_cart'])) {
         <button type="submit" name="clear_cart">Clear Load</button>
     </form>
 
-    <a href="?action=export">Export as CSV</a> <a type="hidden" href="?action=email">Email To Office</a>
+    <a href="?action=export">Export as CSV</a> <a href="?action=email" style="display: none;">Email To Office</a>
     <form action="send_to_po.php" method="post" id="sendToPoForm">
         <input type="hidden" name="cart_data" id="cartDataInput">
         <input type="hidden" name="po_number" id="poNumberInput">
