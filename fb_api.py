@@ -1,3 +1,5 @@
+from pprint import pprint
+
 import requests
 import keys as k
 import logging
@@ -30,15 +32,14 @@ data_query_uri = 'api/data-query'
 login_exceeded_message = 'The login limit'
 
 part_body = [
-        "PartNumber",
-        "PartDescription",
-        "PartDetails",
-        "UOM",
-        "PartType",
-        "ConsumptionRate",
-        "POItemType"
+    "PartNumber",
+    "PartDescription",
+    "PartDetails",
+    "UOM",
+    "PartType",
+    "ConsumptionRate",
+    "POItemType"
 ]
-
 
 
 def fb_login():
@@ -80,9 +81,9 @@ def check_part_exists(token, part_number):
                  f"Part search URL {part_search_url}"
                  f"Part Number {part_number}"
                  f"headers are {headers}")
-    #json = response.json()
-    #print(json)
-    #print(json['totalCount'])
+    # json = response.json()
+    # print(json)
+    # print(json['totalCount'])
     try:
         if response.json()['totalCount'] > 0:
             return response.json()
@@ -91,6 +92,7 @@ def check_part_exists(token, part_number):
     except:
         return False
 
+
 def check_for_part(partNumber, products, create_token=None):
     own_login = False  # Initialize own_login
     if not create_token:
@@ -98,10 +100,10 @@ def check_for_part(partNumber, products, create_token=None):
         logger.debug(f"FB Login token {create_token} created")
         own_login = True
     if create_token:
-        #current_dict = {partNumber: {
+        # current_dict = {partNumber: {
         #    'Manufacturer': products[partNumber]['Manufacturer']
-        #}}
-        #c.add_mfrid_to_parts_dict()
+        # }}
+        # c.add_mfrid_to_parts_dict()
 
         # Make sure the arguments are in the correct order
         check = check_part_exists(create_token, partNumber)
@@ -114,6 +116,7 @@ def check_for_part(partNumber, products, create_token=None):
             fb_logout(create_token)
             logger.debug(f"Logging out {create_token}")
         return False
+
 
 def verify_part_dict(parts_dict):
     required_elements = ["Description", "Details", "UOM", "UPC", "PartType", "Active", "ABCCode", "Weight", "WeightUOM",
@@ -147,8 +150,9 @@ def verify_part_dict(parts_dict):
 
     return parts_dict
 
+
 def create_part(part_dict, token=None):
-    logger.debug(f"create_part got {part_dict}")
+    logger.debug(pprint(f"create_part got {part_dict}"))
     if not token:
         token = fb_login()
         own_login = True
@@ -166,24 +170,22 @@ def create_part(part_dict, token=None):
             "Content-Type": "text/plain"
         }
 
-
         for partNumber, part in part.items():
             logger.debug(f"CREATING FB PART {partNumber}")
-            logger.debug(part)
+            logger.debug(pprint(part))
 
-
-            #data = f'''"PartNumber","PartDescription","PartDetails","UOM","UPC","PartType","Active","ABCCode","Weight","WeightUOM","Width","Height","Length","SizeUOM","ConsumptionRate","PrimaryTracking","AlertNote","PictureUrl","Revision","POItemType","DefaultOutsourcedReturnItem","Tracks-Lot Number","Next Value-Lot Number","Tracks-Revision Level","Next Value-Revision Level","Tracks-Expiration Date","Tracks-Serial Number","Next Value-Serial Number","CF-Castings","CF-OEM Part No","CF-Core Return Group","CF-Block Casting","CF-Right Head Casting","CF-Left Head Casting","CF-Crankshaft Casting","CF-Application","CF-Manufacturer","CF-Engine Family"
+            # data = f'''"PartNumber","PartDescription","PartDetails","UOM","UPC","PartType","Active","ABCCode","Weight","WeightUOM","Width","Height","Length","SizeUOM","ConsumptionRate","PrimaryTracking","AlertNote","PictureUrl","Revision","POItemType","DefaultOutsourcedReturnItem","Tracks-Lot Number","Next Value-Lot Number","Tracks-Revision Level","Next Value-Revision Level","Tracks-Expiration Date","Tracks-Serial Number","Next Value-Serial Number","CF-Castings","CF-OEM Part No","CF-Core Return Group","CF-Block Casting","CF-Right Head Casting","CF-Left Head Casting","CF-Crankshaft Casting","CF-Application","CF-Manufacturer","CF-Engine Family"
             #    "{partNumber.replace('"', '').replace(' ', '')}","{part.get('Description', '')}","{part.get('Details', '')}","{part.get('UOM', '')}","{part.get('UPC', '')}","{part.get('PartType', '')}","{part.get('Active', '')}","{part.get('ABCCode', '')}","{part.get('Weight', '')}","{part.get('WeightUOM', '')}","{part.get('Width', '')}","{part.get('Height', '')}","{part.get('Length', '')}","{part.get('SizeUOM', '')}","{part.get('ConsumptionRate', '')}","{part.get('PrimaryTracking', '')}","{part.get('AlertNote', '')}","{part.get('PictureUrl', '')}","{part.get('Revision', '')}","{part.get('POItemType', '')}","{part.get('DefaultOutsourcedReturnItem', '')}","{part.get('Tracks-Lot Number', '')}","{part.get('Next Value-Lot Number', '')}","{part.get('Tracks-Revision Level', '')}","{part.get('Next Value-Revision Level', '')}","{part.get('Tracks-Expiration Date', '')}","{part.get('Next Value-Expiration Date', '')}","{part.get('Tracks-Serial Number', '')}","{part.get('Next Value-Serial Number', '')}","{part.get('CF-Castings', '')}","{part.get('CF-OEM Part No', '')}","{part.get('CF-Core Return Group', '')}","{part.get('CF-Block Casting', '')}","{part.get('CF-Right Head Casting', '')}","{part.get('CF-Left Head Casting', '')}","{part.get('CF-Crankshaft Casting', '')}","{part.get('CF-Application', '')}","{part.get('CF-Manufacturer', '')}","{part.get('CF-Engine Family', '')}"'''
 
-            #data = f'''"PartNumber","PartDescription","PartDetails","UOM","PartType","POItemType","CF-Application","CF-Manufacturer","CF-Engine Family"
+            # data = f'''"PartNumber","PartDescription","PartDetails","UOM","PartType","POItemType","CF-Application","CF-Manufacturer","CF-Engine Family"
             #        {partNumber.replace(' ', '')},'{part.get('Description', '')}','{part.get('Details', '')}',{part.get('UOM', '')},{part.get('PartType', 'Stock')},{part.get('POItemType', '')},'{part.get('CF-Application', '')}','{part.get('CF-Manufacturer', '')},'{part.get('CF-Engine Family', '')}'''
 
             partNumber = partNumber.replace(' ', '')  # Assuming partNumber is defined earlier
             partDescription = part.get('Description', '').replace('"', '""')  # Escaping double quotes within the field
             partDetails = part.get('Details', '').replace('"', '""')  # Escaping double quotes within the field
-            #uom = part.get('UOM', 'ea')
-            #partType = part.get('PartType', 'Inventory')
-            #poItemType = part.get('POItemType', 'Purchase')
+            # uom = part.get('UOM', 'ea')
+            # partType = part.get('PartType', 'Inventory')
+            # poItemType = part.get('POItemType', 'Purchase')
             uom = part.get('UOM', '').strip() or 'ea'
             partType = part.get('PartType', '').strip() or 'Inventory'
             poItemType = part.get('POItemType', '').strip() or 'Purchase'
@@ -197,9 +199,9 @@ def create_part(part_dict, token=None):
             data = f'''"PartNumber","PartDescription","PartDetails","UOM","PartType","POItemType","CF-Application","CF-Manufacturer","CF-Engine Family"
             "{partNumber}","{partDescription}","{partDetails}","{uom}","{partType}","{poItemType}","{cfApplication}","{cfManufacturer}","{cfEngineFamily}"'''
 
-            logger.debug(f"Creating FB part {data}")
+            logger.debug(f"Creating FB part {pprint(data)}")
             try:
-                response = requests.post(f"{k.fb_url}/{part_create_uri}",headers=headers,data=data)
+                response = requests.post(f"{k.fb_url}/{part_create_uri}", headers=headers, data=data)
                 logger.debug(f"FB part creation response is {response.content}")
                 logger.debug(f"Logging out {token}")
                 fb_logout(token)
@@ -292,7 +294,7 @@ def create_po_item(po_number, new_items_dict=None, token=None):
         response_content = response.content.decode()
         po = json.loads(response_content)
         po = construct_po_items(po, new_items_dict, token=token)
-        logger.debug(po)
+        logger.debug(pprint(po))
         response = requests.post(f"{k.fb_url}/{po_uri}/{po_id}", headers=post_headers, data=json.dumps(po))
         logger.debug(response.content)
         # id_value = api_data[0]['id']
@@ -312,9 +314,11 @@ def create_po_item(po_number, new_items_dict=None, token=None):
 
 
 def construct_po_items(json_obj, part_quantity_dict, token=None):
+    logger.debug(f"construct_po_items got json_obj {pprint(json_obj)}")
+    logger.debug(f"construct_po_items got part_quantity_dict {pprint(part_quantity_dict)}")
     # Extract the existing poItems list from the JSON object
     existing_po_items = json_obj.get('poItems', [])
-
+    logger.debug(f"Existing PO Items are {pprint(existing_po_items)}")
     po_items = []
     next_line_number = len(existing_po_items) + 1 if existing_po_items else 1
     for part, part_details in part_quantity_dict.items():
@@ -361,6 +365,7 @@ def construct_po_items(json_obj, part_quantity_dict, token=None):
 
     return json_obj
 
+
 def query_fb(query, column, token=None):
     own_login = False
     if not token:
@@ -395,6 +400,7 @@ def query_fb(query, column, token=None):
             fb_logout(token)
         logger.error(f"Failed to query Fishbowl for with query {query} with error {e}.")
 
+
 def get_part_description(part_number, token=None):
     own_login = False
     if not token:
@@ -405,8 +411,6 @@ def get_part_description(part_number, token=None):
         pass
     else:
         return False
-
-
 
     headers = {
         "Authorization": f"Bearer {token}",
@@ -456,7 +460,7 @@ def generate_bom_csv():
     # Make the API request
     response = requests.get(f"{k.fb_url}/{api_endpoint}", headers=headers, data=query)
     fb_logout(token)
-    logger.debug(f"generate_bom_csv response is {response.content}")
+    logger.debug(pprint(f"generate_bom_csv response is {response.content}"))
     data = response.json()
 
     # Write the data to bom.csv
@@ -470,16 +474,66 @@ def generate_bom_csv():
             writer.writerow(row)
 
 
+def receive_po_item(po_number, cart_items_dict=None, token=None):
+    own_login = False
+    if not token:
+        token = fb_login()
+        own_login = True
+
+    if token:
+        pass
+    else:
+        return False
+
+    po_id = query_fb(f"SELECT id from po where num = '{po_number}'", 'id', token=token)
+    logger.debug(f"Got PO ID {po_id} for PO {po_number}")
+
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json"
+    }
+
+    try:
+        response = requests.get(f"{k.fb_url}/{po_uri}/{po_id}", headers=headers)
+        response_content = response.content.decode()
+        po = json.loads(response_content)
+
+        # Check for items that are already in the cart
+        for po_item in po['poItems']:
+            part_name = po_item['part']['name']
+            if part_name in cart_items_dict:
+                # Update the quantity in the PO item
+                po_item['quantity'] = str(int(po_item['quantity']) - int(cart_items_dict[part_name]['quantity']))
+                if int(po_item['quantity']) <= 0:
+                    # Remove the PO item if the quantity is 0
+                    po['poItems'].remove(po_item)
+
+        # Update the PO
+        response = requests.post(f"{k.fb_url}/{po_uri}/{po_id}", headers=headers, data=json.dumps(po))
+        logger.debug(response.content)
+
+        if own_login:
+            fb_logout(token)
+        response.raise_for_status()
+
+        return response.content
+    except Exception as e:
+        if own_login:
+            fb_logout(token)
+        logger.error(e, exc_info=True)
+
+
 def main():
-    #token = fb_login()
+    # token = fb_login()
     if check_for_part('0518d4079AC'):
         print('Found')
     else:
         print('None')
-    #print(token)
-    #print(check_part_exists(token,'051d84079AC'))
-    #logout = fb_logout(token)
+    # print(token)
+    # print(check_part_exists(token,'051d84079AC'))
+    # logout = fb_logout(token)
+
 
 if __name__ == '__main__':
     pass
-    #main()
+    # main()

@@ -200,3 +200,15 @@ button[name="increase_quantity"]:hover, button[name="decrease_quantity"]:hover {
     }
 }
 
+/* Add styles for the 'Receive to PO' button */
+#receiveToPoButton {
+    background-color: #D2CA8A;
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 5px 10px;
+}
+
+#receiveToPoButton:hover {
+    background-color: #b8b068;
+}
