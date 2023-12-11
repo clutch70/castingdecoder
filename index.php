@@ -44,6 +44,49 @@ function exportCart() {
     exit();
 }
 
+// Function to email cart.
+function emailCart() {
+    $to = 'fishbowldevs@custardcore.com';
+    $subject = 'Current Load CSV';
+    $message = 'Please find attached the current load CSV.';
+    $headers = 'From: noreply@custardcore.com' . "\r\n";
+
+    // Generate the CSV data
+    $csv_data = fopen('php://temp', 'r+');
+    fputcsv($csv_data, ['Quantity', 'Part Number', 'Description', 'Cost', 'Price']); // Column headings
+
+    // Output the cart items.
+    foreach ($_SESSION['cart'] as $partNumber => $item) {
+        fputcsv($csv_data, [$item['quantity'], $partNumber, $item['description'], $item['cost'], $item['price']]);
+    }
+
+    rewind($csv_data);
+    $csv_data = stream_get_contents($csv_data);
+
+    // Encode the CSV data
+    $csv_data = chunk_split(base64_encode($csv_data));
+
+    // Generate a boundary string
+    $random_hash = md5(date('r', time()));
+    $headers .= "Content-Type: multipart/mixed; boundary=\"PHP-mixed-".$random_hash."\"\r\n";
+
+    // Add the CSV data to the message
+    $message .= "--PHP-mixed-$random_hash\r\n" .
+                "Content-Type: text/csv; name=\"current_load.csv\"\r\n" .
+                "Content-Transfer-Encoding: base64\r\n" .
+                "Content-Disposition: attachment\r\n\r\n" .
+                $csv_data . "\r\n";
+
+    // Send the email
+    mail($to, $subject, $message, $headers);
+}
+
+// Check for email cart action
+if(isset($_GET['action']) && $_GET['action'] == 'email') {
+    emailCart();
+}
+
+
 // Check for remove from cart action
 if(isset($_POST['remove_from_cart'])) {
     $partNumber = $_POST['part_number'];
@@ -195,7 +238,7 @@ if(isset($_POST['add_to_cart'])) {
         <button type="submit" name="clear_cart">Clear Load</button>
     </form>
 
-    <a href="?action=export">Export as CSV</a>
+    <a href="?action=export">Export as CSV</a> <a href="?action=email">Email To Office</a>
     <form action="send_to_po.php" method="post" id="sendToPoForm">
         <input type="hidden" name="cart_data" id="cartDataInput">
         <input type="hidden" name="po_number" id="poNumberInput">
