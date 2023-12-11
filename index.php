@@ -167,9 +167,9 @@ if(isset($_POST['add_to_cart'])) {
                         <td>
                             <form action="" method="post">
                                 <input type="hidden" name="part_number" value="<?php echo htmlspecialchars($partNumber); ?>">
-                                <button type="submit" name="decrease_quantity">-</button>
-                                <?php echo htmlspecialchars($item['quantity']); ?>
                                 <button type="submit" name="increase_quantity">+</button>
+                                <?php echo htmlspecialchars($item['quantity']); ?>
+                                <button type="submit" name="decrease_quantity">-</button>
                             </form>
                         </td>
                         <td><?php echo htmlspecialchars($partNumber); ?></td>
