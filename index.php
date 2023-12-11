@@ -9,7 +9,11 @@ use PHPMailer\PHPMailer\Exception;
 use League\OAuth2\Client\Provider\GenericProvider;
 require 'vendor/autoload.php';
 
+$config = parse_ini_file('config.ini');
 
+$application_id = $config['application_id'];
+$directory_id = $config['directory_id'];
+$secret_value = $config['secret_value'];
 
 // Initialize the cart if it's not already set
 if (!isset($_SESSION['cart'])) {
