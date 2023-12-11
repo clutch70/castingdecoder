@@ -1,5 +1,18 @@
 <?php
+$config = parse_ini_file('config.ini');
+
+// Access the values
+$application_id = $config['application_id'];
+$directory_id = $config['directory_id'];
+$secret_value = $config['secret_value'];
+
 session_start(); // Start the session.
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+use League\OAuth2\Client\Provider\GenericProvider;
+
 
 // Initialize the cart if it's not already set
 if (!isset($_SESSION['cart'])) {
@@ -46,39 +59,63 @@ function exportCart() {
 
 // Function to email cart.
 function emailCart() {
-    $to = 'fishbowldevs@custardcore.com';
-    $subject = 'Current Load CSV';
-    $message = 'Please find attached the current load CSV.';
-    $headers = 'From: noreply@custardcore.com' . "\r\n";
+    // OAuth 2.0 settings
+    $provider = new GenericProvider([
+        'clientId'                => $application_id,
+        'clientSecret'            => $secret_value,
+        'urlAuthorize'            => 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize',
+        'urlAccessToken'          => "https://login.microsoftonline.com/$directory_id/oauth2/v2.0/token",
+        'urlResourceOwnerDetails' => '',
+        'scopes'                  => 'https://graph.microsoft.com/Mail.Send'
+    ]);
 
-    // Generate the CSV data
-    $csv_data = fopen('php://temp', 'r+');
-    fputcsv($csv_data, ['Quantity', 'Part Number', 'Description', 'Cost', 'Price']); // Column headings
+    // Get OAuth 2.0 token
+    $accessToken = $provider->getAccessToken('client_credentials');
 
-    // Output the cart items.
-    foreach ($_SESSION['cart'] as $partNumber => $item) {
-        fputcsv($csv_data, [$item['quantity'], $partNumber, $item['description'], $item['cost'], $item['price']]);
+    // PHPMailer setup
+    $mail = new PHPMailer(true);
+
+    try {
+        // Server settings
+        $mail->isSMTP();
+        $mail->Host       = 'smtp.office365.com';
+        $mail->SMTPAuth   = true;
+        $mail->AuthType   = 'XOAUTH2';
+        $mail->Username   = 'inventory@custardcore.com';
+        $mail->Password   = $accessToken->getToken();
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port       = 587;
+
+        // Recipients
+        $mail->setFrom('inventory@custardcore.com', 'Mailer');
+        $mail->addAddress('fishbowldevs@custardcore.com', 'Receiver Name'); // Add a recipient
+
+        // Attachments
+        // Generate the CSV data
+        $csv_data = fopen('php://temp', 'r+');
+        fputcsv($csv_data, ['Quantity', 'Part Number', 'Description', 'Cost', 'Price']); // Column headings
+
+        // Output the cart items.
+        foreach ($_SESSION['cart'] as $partNumber => $item) {
+            fputcsv($csv_data, [$item['quantity'], $partNumber, $item['description'], $item['cost'], $item['price']]);
+        }
+
+        rewind($csv_data);
+        $csv_data_string = stream_get_contents($csv_data);
+        fclose($csv_data);
+
+        $mail->addStringAttachment($csv_data_string, 'current_load.csv');
+
+        // Content
+        $mail->isHTML(true); // Set email format to HTML
+        $mail->Subject = 'Current Load CSV';
+        $mail->Body    = 'Please find attached the current load CSV.';
+
+        $mail->send();
+        echo 'Message has been sent';
+    } catch (Exception $e) {
+        echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
     }
-
-    rewind($csv_data);
-    $csv_data = stream_get_contents($csv_data);
-
-    // Encode the CSV data
-    $csv_data = chunk_split(base64_encode($csv_data));
-
-    // Generate a boundary string
-    $random_hash = md5(date('r', time()));
-    $headers .= "Content-Type: multipart/mixed; boundary=\"PHP-mixed-".$random_hash."\"\r\n";
-
-    // Add the CSV data to the message
-    $message .= "--PHP-mixed-$random_hash\r\n" .
-                "Content-Type: text/csv; name=\"current_load.csv\"\r\n" .
-                "Content-Transfer-Encoding: base64\r\n" .
-                "Content-Disposition: attachment\r\n\r\n" .
-                $csv_data . "\r\n";
-
-    // Send the email
-    mail($to, $subject, $message, $headers);
 }
 
 // Check for email cart action
