@@ -161,12 +161,12 @@ if(isset($_POST['add_to_cart'])) {
                         </td>
                     </tr>
                 <?php endforeach; ?>
-<?php else: ?>
-    <tr>
-        <td colspan="4">Your cart is empty.</td>
-    </tr>
-<?php endif; ?>
+            <?php else: ?>
+                <tr>
+                    <td colspan="4">Your cart is empty.</td>
+                </tr>
             <?php endif; ?>
+
         </tbody>
     </table>
     <form action="" method="post">
